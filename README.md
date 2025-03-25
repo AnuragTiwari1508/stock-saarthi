@@ -68,15 +68,8 @@ Stock Saarthi is an innovative web-based platform that combines traditional stoc
 - Enhanced predictive algorithms
 - Social trading features
 
-## Contributors
-
-- Rishabharaj Sharma - Lead Developer & Creator
 
 ## License
 
 © 2024 Stock Saarthi. All rights reserved.
 
----
-
-**Contact:** rishabharaj321@gmail.com  
-**Connect:** [LinkedIn](https://www.linkedin.com/in/rishabharaj-sharma-57a7a8256) | [Instagram](https://www.instagram.com/eclipsor_rishabh)
