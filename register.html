@@ -1,0 +1,66 @@
+# register.html (Optional)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-chart-line fa-2x"></i>
+            <span>STOCK SAARTHI</span>
+            <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html" class="navbar-item">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="index.html#stocks-section" class="navbar-item">
+                <i class="fas fa-chart-bar"></i> Stocks
+            </a>
+            <a href="index.html#mutual-funds-section" class="navbar-item">
+                <i class="fas fa-hand-holding-usd"></i> Mutual Funds
+            </a>
+            <a href="AI.html" class="navbar-item">
+                <i class="fas fa-robot"></i> AI Assistant
+            </a>
+            <a href="profile.html" class="navbar-item">
+                <i class="fas fa-wallet"></i> Wallet
+            </a>
+            <button id="theme-toggle" class="navbar-item">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+    <h1>Register</h1>
+    <form method="post" action="">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br>
+
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required><br>
+
+        <label for="confirm_password">Confirm Password:</label>
+        <input type="password" name="confirm_password" id="confirm_password" required><br>
+
+        <button type="submit">Register</button>
+    </form>
+    {% for message in messages %}
+        <p>{{ message }}</p>
+    {% endfor %}
+    <footer>
+    <p>&copy; 2024 Stock Saarthi. All rights reserved.</p>
+    <div class="footer-links">
+      <a href="#">Privacy Policy</a> | 
+      <a href="#">Terms of Service</a> | 
+      <a href="contactUS.html">Contact Us</a>
+    </div>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
