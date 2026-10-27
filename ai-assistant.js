@@ -5,7 +5,9 @@
 // =====================================================
 
 const AI_CONFIG = {
-  GEMINI_API_KEY: 'YOUR_GEMINI_API_KEY_HERE',
+  get GEMINI_API_KEY() {
+    return localStorage.getItem('ss_gemini_key') || '';
+  },
   GEMINI_MODEL: 'gemini-3.5-flash',
   FALLBACK_MODELS: ['gemini-3.5-flash-lite', 'gemini-3.8-flash'],
   GEMINI_URL: 'https://generativelanguage.googleapis.com/v1beta/models',
@@ -557,6 +559,20 @@ const AIChat = {
   async handleSend() {
     const message = this.inputField.value.trim();
     if (!message || this.isProcessing) return;
+
+    // Check if API key is configured
+    if (!AI_CONFIG.GEMINI_API_KEY) {
+      const key = prompt(
+        '🔑 Please enter your Gemini API Key to use the AI Assistant.\n\n' +
+        'Get a free key at: https://aistudio.google.com/apikey\n\n' +
+        'Your key will be saved in your browser (localStorage).'
+      );
+      if (key && key.trim()) {
+        localStorage.setItem('ss_gemini_key', key.trim());
+      } else {
+        return; // User cancelled
+      }
+    }
 
     this.isProcessing = true;
     this.sendBtn.disabled = true;
