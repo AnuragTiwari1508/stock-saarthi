@@ -1,66 +1,199 @@
-# register.html (Optional)
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <meta name="description" content="Create your Stock Saarthi account - Start trading stocks today">
+    <title>Register — Stock Saarthi</title>
+    <link rel="stylesheet" href="website.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <i class="fas fa-chart-line fa-2x"></i>
-            <span>STOCK SAARTHI</span>
-            <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
-                <i class="fas fa-bars"></i>
-            </button>
+<body class="auth-page">
+
+    <div class="auth-card">
+        <div class="brand-logo">
+            <i class="fas fa-chart-line"></i>
+            <h1>STOCK SAARTHI</h1>
+            <p>Create your trading account</p>
         </div>
-        <div class="navbar-menu">
-            <a href="index.html" class="navbar-item">
-                <i class="fas fa-home"></i> Home
-            </a>
-            <a href="index.html#stocks-section" class="navbar-item">
-                <i class="fas fa-chart-bar"></i> Stocks
-            </a>
-            <a href="index.html#mutual-funds-section" class="navbar-item">
-                <i class="fas fa-hand-holding-usd"></i> Mutual Funds
-            </a>
-            <a href="AI.html" class="navbar-item">
-                <i class="fas fa-robot"></i> AI Assistant
-            </a>
-            <a href="profile.html" class="navbar-item">
-                <i class="fas fa-wallet"></i> Wallet
-            </a>
-            <button id="theme-toggle" class="navbar-item">
-                <i class="fas fa-moon"></i>
-            </button>
+
+        <!-- Error Alert -->
+        <div class="auth-alert" id="register-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="register-error-text"></span>
         </div>
-    </nav>
-    <h1>Register</h1>
-    <form method="post" action="">
-        {% csrf_token %}
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required><br>
 
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required><br>
+        <form id="register-form" onsubmit="return false;">
+            <div class="auth-form-group">
+                <label for="fullName">Full Name</label>
+                <div class="input-wrapper">
+                    <input type="text" id="fullName" placeholder="Enter your full name" required>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="field-error" id="fullName-error"></div>
+            </div>
 
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" name="confirm_password" id="confirm_password" required><br>
+            <div class="auth-form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="field-error" id="email-error"></div>
+            </div>
 
-        <button type="submit">Register</button>
-    </form>
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-    <footer>
-    <p>&copy; 2024 Stock Saarthi. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="#">Privacy Policy</a> | 
-      <a href="#">Terms of Service</a> | 
-      <a href="contactUS.html">Contact Us</a>
+            <div class="auth-form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" placeholder="Choose a username" required autocomplete="username">
+                    <i class="fas fa-at"></i>
+                </div>
+                <div class="field-error" id="username-error"></div>
+            </div>
+
+            <div class="auth-form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="Create a password (min 6 chars)" required autocomplete="new-password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="field-error" id="password-error"></div>
+            </div>
+
+            <div class="auth-form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="confirmPassword" placeholder="Confirm your password" required autocomplete="new-password">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="field-error" id="confirmPassword-error"></div>
+            </div>
+
+            <button type="submit" class="auth-submit-btn" id="register-btn">
+                <i class="fas fa-rocket"></i> Create Account
+            </button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <div class="auth-footer">
+            Already have an account? <a href="login.html">Login</a>
+        </div>
     </div>
-  </footer>
-  <script src="script.js"></script>
+
+    <script src="auth.js"></script>
+    <script>
+        // Redirect if already logged in
+        if (AuthManager.isLoggedIn()) {
+            window.location.href = 'profile.html';
+        }
+
+        const registerForm = document.getElementById('register-form');
+        const registerBtn = document.getElementById('register-btn');
+        const errorAlert = document.getElementById('register-error');
+        const errorText = document.getElementById('register-error-text');
+
+        function showError(msg) {
+            errorText.textContent = msg;
+            errorAlert.classList.add('visible');
+        }
+
+        function hideError() {
+            errorAlert.classList.remove('visible');
+        }
+
+        function setFieldError(fieldId, msg) {
+            const group = document.getElementById(fieldId).closest('.auth-form-group');
+            const errorEl = document.getElementById(fieldId + '-error');
+            if (msg) {
+                group.classList.add('error');
+                errorEl.textContent = msg;
+                errorEl.style.display = 'block';
+            } else {
+                group.classList.remove('error');
+                errorEl.style.display = 'none';
+            }
+        }
+
+        function clearErrors() {
+            hideError();
+            ['fullName', 'email', 'username', 'password', 'confirmPassword'].forEach(f => setFieldError(f, ''));
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        registerForm.addEventListener('submit', () => {
+            clearErrors();
+
+            const fullName = document.getElementById('fullName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validate all fields
+            let hasError = false;
+
+            if (!fullName || fullName.length < 2) {
+                setFieldError('fullName', 'Full name is required (min 2 characters)');
+                hasError = true;
+            }
+
+            if (!email) {
+                setFieldError('email', 'Email is required');
+                hasError = true;
+            } else if (!validateEmail(email)) {
+                setFieldError('email', 'Please enter a valid email');
+                hasError = true;
+            }
+
+            if (!username || username.length < 3) {
+                setFieldError('username', 'Username must be at least 3 characters');
+                hasError = true;
+            } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+                setFieldError('username', 'Username can only contain letters, numbers, and underscores');
+                hasError = true;
+            }
+
+            if (!password || password.length < 6) {
+                setFieldError('password', 'Password must be at least 6 characters');
+                hasError = true;
+            }
+
+            if (password !== confirmPassword) {
+                setFieldError('confirmPassword', 'Passwords do not match');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Attempt registration
+            registerBtn.classList.add('loading');
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+
+            setTimeout(() => {
+                const result = AuthManager.register(fullName, email, username, password);
+
+                if (result.success) {
+                    registerBtn.innerHTML = '<i class="fas fa-check"></i> Account Created!';
+                    registerBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 800);
+                } else {
+                    showError(result.error);
+                    registerBtn.classList.remove('loading');
+                    registerBtn.innerHTML = '<i class="fas fa-rocket"></i> Create Account';
+                }
+            }, 800);
+        });
+
+        // Clear field errors on input
+        ['fullName', 'email', 'username', 'password', 'confirmPassword'].forEach(fieldId => {
+            document.getElementById(fieldId).addEventListener('input', () => setFieldError(fieldId, ''));
+        });
+    </script>
 </body>
 </html>

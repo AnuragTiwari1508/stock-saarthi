@@ -1,75 +1,127 @@
-# Stock Saarthi - AI-Powered Stock Trading Platform
+# 📈 Stock Saarthi — AI-Powered Stock Trading & Portfolio Platform
 
-## Overview
+> **Live Indian Stock Market (NSE/BSE) Data • Google Gemini AI Investment Assistant • Simulated Trading Wallet • MetaMask Web3 Integration**
 
-Stock Saarthi is an innovative web-based platform that combines traditional stock trading with cutting-edge AI analysis and blockchain technology. Our platform provides tokenized stock trading, personalized investment recommendations, and secure wallet integration to help investors make informed decisions.
+---
 
-## Features
+## 🌟 Overview
 
-### 🚀 Core Features
+**Stock Saarthi** is a modern, responsive web application that bridges traditional Indian stock investing with state-of-the-art AI analysis and Web3 blockchain integration. 
 
-- **AI-Powered Assistant**: Get intelligent investment advice and market insights powered by Gemini 2.0 Flash API
-- **Interactive Stock Explorer**: Browse and analyze trending stocks with real-time price data and performance metrics
-- **Mutual Funds Section**: Discover high-performing mutual funds with detailed risk assessments and historical returns
-- **Secure Wallet Integration**: Connect your MetaMask wallet for seamless token transactions
-- **Dark/Light Theme**: Customize your viewing experience with an intuitive theme toggle
+Whether you want to track real-time NSE/BSE stock movements, test trading strategies risk-free using a simulated ₹1,00,000 paper trading wallet, or chat with a specialized financial AI assistant, Stock Saarthi provides an all-in-one experience.
 
-### 💡 Technical Highlights
+---
 
-- **Responsive Design**: Optimized user experience across desktop, tablet, and mobile devices
-- **Modern UI/UX**: Clean interface with intuitive navigation and visual feedback
-- **Blockchain Integration**: Secure MetaMask wallet connectivity for cryptocurrency transactions
-- **Real-time Data**: Up-to-date market information and analytics
-- **Personalized Recommendations**: AI-driven investment suggestions based on your preferences
+## 🚀 Key Features
 
-## Screenshots
+### 1. 🤖 AI Financial Assistant (Powered by Gemini)
+- Interactive, context-aware stock market companion trained on Indian financial markets (NSE, BSE, SEBI regulations).
+- Automatically detects mentioned stocks (e.g. *"Should I invest in Reliance or TCS?"*) and dynamically renders live price cards and interactive Chart.js mini charts within the chat stream.
+- Supports bilingual Hindi-English (Hinglish) market queries.
 
-### Home Page
-![Home Page](https://drive.google.com/uc?export=view&id=1tOf3b-x7e9kN4s8wurUolPf6zxZq5Kt1
-)
+### 2. 📊 Live Stock Explorer (NSE & BSE)
+- Real-time tracking of top Indian blue-chip stocks and sector leaders (NIFTY 50, NIFTY NEXT 50, Banking, IT, Energy, Auto, Pharma, FMCG, and more).
+- Interactive Chart.js sparklines displaying daily price trends for every single stock.
+- Deep detail modal displaying comprehensive statistics: Day High/Low, 52-Week Range, Previous Close, Volume, and Market Cap.
+- Instant search filter by company name, ticker symbol, or sector.
 
-### AI Assistant
-![AI Assistant](https://drive.google.com/uc?export=view&id=1Ey3QidkaUd63zCHgCtT9WJEvFc4QXBPi)
+### 3. 💼 Simulated Paper Trading & Portfolio Wallet
+- Automatic ₹1,00,000 initial welcome bonus credited to every new account.
+- Real-time Buy & Sell stock order execution with custom quantities and quick-select buttons.
+- Real-time profit/loss tracking, average buy price calculation, and portfolio valuation.
+- Comprehensive transaction history with deposit, withdrawal, and trade records.
 
-### Wallet Integration
-![Wallet](https://drive.google.com/uc?export=view&id=1oFZpIbmrF2Rl08KfrhiMyAveIc9EUINF)
-## How It Works
+### 4. 🦊 MetaMask Web3 Integration
+- One-click MetaMask wallet connection for Ethereum/Polygon account viewing.
+- Displays connected wallet address and balance in real time.
 
-1. **Explore Markets**: Browse trending stocks and mutual funds with comprehensive performance data
-2. **Get AI Insights**: Consult our AI assistant for personalized investment recommendations
-3. **Connect Wallet**: Link your MetaMask wallet for secure transactions
-4. **Invest Confidently**: Make informed decisions backed by data and AI analysis
+### 5. 🌓 Modern UI & Light/Dark Theme
+- Sleek glassmorphism and gradient design with smooth micro-animations.
+- Full mobile-responsive navigation with hamburger drawer.
+- Instant theme toggle between vibrant Light mode and sleek Dark mode, preserved across sessions in `localStorage`.
 
-## Technologies Used
+---
 
-- **Frontend**: HTML5, CSS3, JavaScript (Vue.js)
-- **AI Integration**: Gemini 2.0 Flash API for intelligent analysis
-- **Web3**: MetaMask integration for blockchain transactions
-- **UI Framework**: Custom CSS with responsive design
-- **Icons**: Font Awesome library
+## 🛠️ Tech Stack
 
-## Getting Started
+- **Frontend**: HTML5, Modern CSS3 (Variables, Flexbox, Grid), JavaScript (ES6+)
+- **Charting**: [Chart.js 4.4](https://www.chartjs.org/)
+- **Icons**: [Font Awesome 6](https://fontawesome.com/)
+- **AI Integration**: Google Generative AI (Gemini Flash API)
+- **Market Data**: Yahoo Finance API with load-balanced proxy failover & offline baseline resilience
+- **Web3**: MetaMask Ethereum Provider API (`window.ethereum`)
+- **Backend (Optional)**: 
+  - Node.js + Express (`server.js`)
+  - Python + Flask + yfinance (`flaskbackend.py`)
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/rishabharaj/tokenized-stock-saarthi.git
-   ```
+---
 
-2. Open `index.html` in your browser
-3. Explore stocks and mutual funds
-4. Connect your MetaMask wallet (optional) for full functionality
-5. Consult the AI assistant for personalized advice
+## ⚡ Quick Start
 
-## Future Roadmap
+### Option 1: Run directly in any browser (No setup required!)
+Simply open `index.html` in your web browser:
+```bash
+# On Windows PowerShell
+Start-Process index.html
+```
 
-- Advanced portfolio tracking and analytics
-- Integration with additional blockchain networks
-- Mobile app development
-- Enhanced predictive algorithms
-- Social trading features
+### Option 2: Run with Node.js Fullstack Server
+```bash
+# 1. Install dependencies
+npm install
 
+# 2. Start the server
+npm start
 
-## License
+# 3. Open http://localhost:3000 in your browser
+```
 
-© 2024 Stock Saarthi. All rights reserved.
+### Option 3: Run with Python Flask Backend
+```bash
+# 1. Install Python dependencies
+pip install -r requirements.txt
 
+# 2. Run the Flask server
+python flaskbackend.py
+```
+
+---
+
+## 📁 Project Structure
+
+```text
+stock-saarthi/
+├── index.html            # Main dashboard & live stock explorer
+├── AI.html               # Gemini-powered AI Assistant chat page
+├── profile.html          # Portfolio tracker & trading wallet
+├── login.html            # User login page
+├── register.html         # User registration page
+├── aboutus.html          # About us & mission page
+├── contactUS.html        # Contact support & FAQ page
+├── privacy.html          # Privacy policy page
+├── script.js             # Stock market data engine, search & trading modal
+├── ai-assistant.js       # Gemini AI chat engine & chart renderer
+├── auth.js               # Authentication, wallet & portfolio manager
+├── website.css           # Global stylesheet & design tokens
+├── ai-assistant.css      # AI Assistant custom styles & chat bubbles
+├── login.css             # Authentication card styles
+├── server.js             # Express.js backend & API proxy
+├── flaskbackend.py       # Python Flask alternative backend
+├── package.json          # Node.js project metadata & scripts
+├── requirements.txt      # Python dependencies
+└── .gitignore            # Git exclusion rules
+```
+
+---
+
+## 👤 Author
+
+**Anurag Tiwari**
+- GitHub: [@AnuragTiwari1508](https://github.com/AnuragTiwari1508)
+- Repository: [https://github.com/AnuragTiwari1508/stock-saarthi](https://github.com/AnuragTiwari1508/stock-saarthi)
+
+---
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).

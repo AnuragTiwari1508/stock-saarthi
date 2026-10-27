@@ -3,34 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="login.css">
-    <script src = "script.js"></script>
+    <meta name="description" content="Login to Stock Saarthi - Your AI-powered stock trading platform">
+    <title>Login — Stock Saarthi</title>
+    <link rel="stylesheet" href="website.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-    
-        <div class="login-form">
-            <h1>Login</h1>
-            <form method="post" action="">
-            
-                <label for="username">Username:</label>
-                <input type="text" name="username" id="username" required><br>
+<body class="auth-page">
 
-                <label for="password">Password:</label>
-                <input type="password" name="password" id="password" required><br>
-
-                <button type="submit">Login</button>
-            </form>
-          
+    <div class="auth-card">
+        <div class="brand-logo">
+            <i class="fas fa-chart-line"></i>
+            <h1>STOCK SAARTHI</h1>
+            <p>Login to your trading account</p>
         </div>
-    <footer>
-    <p>&copy; 2024 Stock Saarthi. All rights reserved.</p>
-    <div class="footer-links">
-      <a href="#">Privacy Policy</a> | 
-      <a href="#">Terms of Service</a> | 
-      <a href="contactUS.html">Contact Us</a>
+
+        <!-- Error Alert -->
+        <div class="auth-alert" id="login-error">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="login-error-text"></span>
+        </div>
+
+        <form id="login-form" onsubmit="return false;">
+            <div class="auth-form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" placeholder="Enter your username" required autocomplete="username">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="field-error" id="username-error"></div>
+            </div>
+
+            <div class="auth-form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="field-error" id="password-error"></div>
+            </div>
+
+            <button type="submit" class="auth-submit-btn" id="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+        </form>
+
+        <div class="auth-divider">or</div>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="register.html">Create Account</a>
+        </div>
     </div>
-  </footer>
-  
+
+    <script src="auth.js"></script>
+    <script>
+        // Redirect if already logged in
+        if (AuthManager.isLoggedIn()) {
+            window.location.href = 'profile.html';
+        }
+
+        const loginForm = document.getElementById('login-form');
+        const loginBtn = document.getElementById('login-btn');
+        const errorAlert = document.getElementById('login-error');
+        const errorText = document.getElementById('login-error-text');
+
+        function showError(msg) {
+            errorText.textContent = msg;
+            errorAlert.classList.add('visible');
+        }
+
+        function hideError() {
+            errorAlert.classList.remove('visible');
+        }
+
+        function setFieldError(fieldId, msg) {
+            const group = document.getElementById(fieldId).closest('.auth-form-group');
+            const errorEl = document.getElementById(fieldId + '-error');
+            if (msg) {
+                group.classList.add('error');
+                errorEl.textContent = msg;
+                errorEl.style.display = 'block';
+            } else {
+                group.classList.remove('error');
+                errorEl.style.display = 'none';
+            }
+        }
+
+        function clearErrors() {
+            hideError();
+            setFieldError('username', '');
+            setFieldError('password', '');
+        }
+
+        loginForm.addEventListener('submit', () => {
+            clearErrors();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Validate
+            let hasError = false;
+
+            if (!username) {
+                setFieldError('username', 'Username is required');
+                hasError = true;
+            }
+
+            if (!password) {
+                setFieldError('password', 'Password is required');
+                hasError = true;
+            }
+
+            if (hasError) return;
+
+            // Attempt login
+            loginBtn.classList.add('loading');
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+
+            // Small delay for UX
+            setTimeout(() => {
+                const result = AuthManager.login(username, password);
+
+                if (result.success) {
+                    loginBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                    setTimeout(() => {
+                        window.location.href = 'profile.html';
+                    }, 500);
+                } else {
+                    showError(result.error);
+                    loginBtn.classList.remove('loading');
+                    loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+                }
+            }, 600);
+        });
+
+        // Clear errors on input
+        document.getElementById('username').addEventListener('input', () => setFieldError('username', ''));
+        document.getElementById('password').addEventListener('input', () => setFieldError('password', ''));
+    </script>
 </body>
 </html>

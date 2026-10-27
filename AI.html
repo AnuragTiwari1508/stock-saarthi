@@ -3,365 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI Assistant - Stock Saarthi">
-    <title>AI Assistant - Stock Saarthi</title>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
+    <meta name="description" content="Stock Saarthi AI Assistant — Your intelligent Indian stock market companion powered by AI. Get live stock data, charts, and expert analysis.">
+    <title>AI Assistant — Stock Saarthi</title>
     <link rel="stylesheet" href="website.css">
+    <link rel="stylesheet" href="ai-assistant.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* Add these CSS variables at the top of your style section */
-        :root {
-            --primary-color: #0c5f88;
-            --secondary-color: #2a9d8f;
-            --background-light: #ffffff;
-            --background-dark: #1a1a1a;
-            --card-dark: #2c2c2c;
-            --text-light: #ffffff;
-            --text-dark: #333333;
-            --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Add theme transition */
+        /* Page-level overrides */
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Update dark mode styles */
-        .dark-mode {
-            background-color: var(--background-dark);
-            color: var(--text-light);
-        }
-
-        .dark-mode .navbar {
-            background: var(--background-dark);
-        }
-
-        .dark-mode .message-container {
-            background-color: var(--card-dark);
-        }
-
-        .dark-mode .message {
-            background-color: var(--background-dark);
-            color: var(--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dark-mode .box {
-            background-color: var(--card-dark);
-            color: var(--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dark-mode .title,
-        .dark-mode .label {
-            color: var(--text-light) !important;
-        }
-
-        .dark-mode .input {
-            background-color: var(--card-dark);
-            color: var(--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dark-mode .button.is-primary {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-        }
-
-        /* Add these navigation styles at the top of your existing styles */
+        /* ── Navigation (matching your site) ─────────────── */
         .navbar {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            padding: 1rem;
+            background: linear-gradient(135deg, #0c5f88, #2a9d8f);
+            padding: 1rem 1.5rem;
             position: sticky;
             top: 0;
             z-index: 1000;
-            box-shadow: var(--shadow);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dark-mode .navbar {
+            background: linear-gradient(135deg, #0a3d56, #1a6b60);
         }
 
         .navbar-brand {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: var(--text-light);
+            gap: 0.8rem;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: -0.01em;
         }
 
         .navbar-menu {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.3rem;
         }
 
         .navbar-item {
-            color: var(--text-light) !important;
+            color: rgba(255,255,255,0.9) !important;
             text-decoration: none;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            padding: 0.5rem 0.9rem;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.88rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
         }
 
         .navbar-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.15);
+            color: #fff !important;
         }
 
-        /* Mobile navigation */
+        .navbar-item.active-page {
+            background: rgba(255,255,255,0.2);
+            color: #fff !important;
+        }
+
+        .navbar-item i {
+            font-size: 0.85rem;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            padding: 0.4rem;
+        }
+
         @media (max-width: 768px) {
-            .navbar-menu {
-                display: none;
-                width: 100%;
-                position: absolute;
-                top: 60px;
-                left: 0;
-                background: var(--primary-color);
-                padding: 1rem;
-                box-shadow: var(--shadow);
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .navbar-menu.active {
-                display: flex;
-            }
-
-            .navbar-item {
-                width: 100%;
-                padding: 0.75rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-                color: var(--text-light) !important;
-            }
-
-            .mobile-toggle {
-                display: block;
-                background: none;
-                border: none;
-                color: var(--text-light);
-                font-size: 1.5rem;
-                cursor: pointer;
-                padding: 0.5rem;
-            }
+            .mobile-toggle { display: block; }
 
             .navbar-brand {
                 width: 100%;
-                display: flex;
                 justify-content: space-between;
-                align-items: center;
-                padding: 0 1rem;
             }
 
-            .dark-mode .navbar-menu {
-                background: var(--background-dark);
-            }
-        }
-
-        /* Hide mobile toggle on desktop */
-        @media (min-width: 769px) {
-            .mobile-toggle {
-                display: none;
-            }
-            
-            .navbar {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
-
-        /* Chat specific styles */
-        .message-container {
-            max-height: 400px;
-            overflow-y: auto;
-            margin-bottom: 1rem;
-        }
-
-        .message {
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .tag {
-            font-weight: bold;
-            margin-right: 0.5rem;
-        }
-
-        .input {
-            background-color: #f4f0f0;
-            color: #000000;
-            transition: all 0.3s ease;
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-        }
-
-        .dark-mode .input {
-            background-color: #333;
-            color: #f6f3f3;
-            border: 1px solid #555;
-        }
-
-        .button.is-primary {
-            width: 100%;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .dark-mode .button.is-primary {
-            background-color: #555;
-            color: #ffffff;
-        }
-
-        .box {
-            background-color: #ffffff;
-            transition: background-color 0.3s ease;
-            width: 100%;
-        }
-
-        .dark-mode .box {
-            background-color: #1e1e1e;
-            color: #8f8585;
-        }
-
-        /* Responsive styles */
-        @media screen and (max-width: 768px) {
-            .column {
-                width: 100% !important;
-                padding: 10px;
-            }
-            .box {
-                padding: 15px;
-            }
-        }
-
-        /* Dark mode styles */
-        .dark-mode .message-container {
-            background-color: var(--background-dark);
-        }
-
-        .dark-mode .message {
-            background-color: var(--card-dark);
-            color: var(--text-light);
-        }
-
-        .dark-mode .box {
-            background-color: var(--background-dark);
-            color: var (--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dark-mode .title,
-        .dark-mode .label {
-            color: var(--text-light);
-        }
-
-        .dark-mode .input {
-            background-color: var(--card-dark);
-            color: var(--text-light);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .dark-mode .button.is-primary {
-            background-color: var(--primary-color);
-            color: var(--text-light);
-        }
-
-        /* Add these footer styles to your existing styles */
-        footer {
-            background: var(--background-dark);
-            color: var(--text-light);
-            padding: 2rem;
-            margin-top: auto;
-            text-align: center;
-        }
-
-        .footer-links {
-            margin-top: 1rem;
-        }
-
-        .footer-links a {
-            color: var(--text-light);
-            text-decoration: none;
-            padding: 0 1rem;
-            border-right: 1px solid rgba(255, 255, 255, 0.2);
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:last-child {
-            border-right: none;
-        }
-
-        .footer-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        .dark-mode .footer-links a {
-            color: var(--text-light);
-        }
-
-        .dark-mode .footer-links a:hover {
-            color: var(--secondary-color);
-        }
-
-        /* Critical mobile navigation styles */
-        @media (max-width: 768px) {
             .navbar-menu {
                 display: none;
                 width: 100%;
                 position: absolute;
-                top: 60px;
+                top: 62px;
                 left: 0;
-                background: inherit;
+                background: linear-gradient(135deg, #0c5f88, #2a9d8f);
                 flex-direction: column;
-                padding: 1rem;
-                box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-                z-index: 100;
+                padding: 0.8rem;
+                box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+                z-index: 999;
             }
-            
-            .navbar-menu.active {
-                display: flex;
+
+            .dark-mode .navbar-menu {
+                background: linear-gradient(135deg, #0a3d56, #1a6b60);
             }
-            
+
+            .navbar-menu.active { display: flex; }
+
             .navbar-item {
-                padding: 0.75rem 0;
                 width: 100%;
-                text-align: center;
+                padding: 0.7rem 1.2rem;
+                justify-content: flex-start;
             }
         }
 
-        /* Update navbar styles to align center-left */
-        .navbar-menu {
-            justify-content: flex-start;
-        }
-        
-        .navbar-item {
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            align-items: center;
-        }
-        
-        .navbar-item i {
-            margin-right: 8px;
-        }
-        
-        /* Ensure mobile menu keeps left alignment */
-        @media (max-width: 768px) {
-            .navbar-menu.active {
-                align-items: flex-start;
+        @media (min-width: 769px) {
+            .navbar {
+                padding: 0.8rem 2rem;
             }
-            
-            .navbar-item {
-                text-align: left;
-                padding-left: 2rem; /* Adds more left padding on mobile */
-            }
+        }
+
+        /* ── Footer ──────────────────────────────────────── */
+        footer {
+            background: #111827;
+            color: rgba(255,255,255,0.7);
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 0.82rem;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            padding: 0 0.6rem;
+            transition: color 0.2s;
+        }
+
+        footer a:hover {
+            color: #2a9d8f;
+        }
+
+        .footer-links {
+            margin-top: 0.5rem;
+        }
+
+        .social-links {
+            margin-top: 0.6rem;
+        }
+
+        .social-links a {
+            font-size: 1.1rem;
+            padding: 0 0.5rem;
         }
     </style>
 </head>
 <body class="light-mode">
-    <!-- Navigation Bar -->
+
+    <!-- ═══ Navigation Bar ═══════════════════════════════ -->
     <nav class="navbar">
         <div class="navbar-brand">
-            <i class="fas fa-chart-line fa-2x"></i>
+            <i class="fas fa-chart-line fa-lg"></i>
             <span>STOCK SAARTHI</span>
             <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
                 <i class="fas fa-bars"></i>
@@ -377,7 +189,7 @@
             <a href="index.html#mutual-funds-section" class="navbar-item">
                 <i class="fas fa-hand-holding-usd"></i> Mutual Funds
             </a>
-            <a href="AI.html" class="navbar-item">
+            <a href="AI.html" class="navbar-item active-page">
                 <i class="fas fa-robot"></i> AI Assistant
             </a>
             <a href="profile.html" class="navbar-item">
@@ -389,40 +201,85 @@
         </div>
     </nav>
 
-    <!-- Chat Application -->
-    <div id="app">
-    <section class="section">
-        <div class="container">
-            <h1 class="title">AI Assistant</h1>
-            <div class="columns">
-                <div class="column is-12">
-                    <div class="box">
-                        <div class="message-container">
-                            <div class="message" v-for="(message, index) in messages" :key="index">
-                                <span class="tag is-info" v-if="message.sender === 'user'">You</span>
-                                <span class="tag is-warning" v-if="message.sender === 'rishabh'">Rishabh</span>
-                                <span>{{ message.text }}</span>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Message</label>
-                            <div class="control">
-                                <input class="input" type="text" v-model="newMessage" @keyup.enter="sendMessage" placeholder="Type your message...">
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="control">
-                                <button class="button is-primary" @click="sendMessage">Send Message</button>
-                            </div>
-                        </div>
-                    </div>
+    <!-- ═══ AI Chat Interface ════════════════════════════ -->
+    <div class="ai-chat-page">
+        <div class="ai-chat-wrapper">
+
+            <!-- Chat Header -->
+            <div class="ai-chat-header">
+                <div class="ai-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="ai-header-info">
+                    <h2>Stock Saarthi AI</h2>
+                    <p><span class="ai-status-dot"></span> Online · Powered by Gemini AI</p>
+                </div>
+                <div class="ai-header-actions">
+                    <button class="ai-header-btn" id="ai-clear-btn" title="Clear Chat">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
                 </div>
             </div>
-        </div>
-    </section>
-</div>
 
-    <!-- Footer -->
+            <!-- Messages Area -->
+            <div class="ai-messages" id="ai-messages">
+
+                <!-- Welcome Screen -->
+                <div class="ai-welcome" id="ai-welcome">
+                    <div class="ai-welcome-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Namaste! 🙏 I'm Stock Saarthi AI</h3>
+                    <p>Your intelligent Indian stock market companion. Ask me about stock prices, market analysis, mutual funds, or investment strategies — I'll fetch live data for you!</p>
+
+                    <!-- Suggestion Chips -->
+                    <div class="ai-suggestions">
+                        <button class="ai-chip" data-query="What is the current price of Reliance?">
+                            <i class="fas fa-rupee-sign"></i> Reliance price
+                        </button>
+                        <button class="ai-chip" data-query="Analyze TCS stock for me with key metrics">
+                            <i class="fas fa-chart-bar"></i> Analyze TCS
+                        </button>
+                        <button class="ai-chip" data-query="Compare HDFC Bank vs ICICI Bank stocks">
+                            <i class="fas fa-balance-scale"></i> HDFC vs ICICI
+                        </button>
+                        <button class="ai-chip" data-query="Which are the best mutual funds to invest in 2024?">
+                            <i class="fas fa-hand-holding-usd"></i> Best Mutual Funds
+                        </button>
+                        <button class="ai-chip" data-query="Explain P/E ratio and how to use it for stock analysis">
+                            <i class="fas fa-graduation-cap"></i> What is P/E Ratio?
+                        </button>
+                        <button class="ai-chip" data-query="Show me Infosys and Wipro stock data">
+                            <i class="fas fa-laptop-code"></i> IT Sector stocks
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input Area -->
+            <div class="ai-input-area">
+                <div class="ai-input-container">
+                    <textarea
+                        class="ai-input-field"
+                        id="ai-input"
+                        placeholder="Ask about any Indian stock, mutual fund, or market concept..."
+                        rows="1"
+                        aria-label="Type your message"
+                    ></textarea>
+                    <button class="ai-send-btn" id="ai-send-btn" title="Send Message" aria-label="Send">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="ai-input-hint">
+                    Press Enter to send · Shift+Enter for new line · Stocks auto-detected from your message
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══ Footer ═══════════════════════════════════════ -->
     <footer>
         <p>&copy; 2024 Stock Saarthi. All rights reserved.</p>
         <div class="footer-links">
@@ -432,114 +289,48 @@
             <a href="#">Terms of Service</a>
         </div>
         <div class="social-links">
-            <a href="mailto:rishabharaj321@gmail.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/AnuragTiwari1508/stock-saarthi" target="_blank" rel="noopener noreferrer" title="GitHub">
+                <i class="fab fa-github"></i>
+            </a>
+            <a href="mailto:anuragtiwari@example.com" target="_blank" rel="noopener noreferrer" title="Email">
                 <i class="fas fa-envelope"></i>
             </a>
-            <a href="https://www.linkedin.com/in/rishabharaj-sharma-57a7a8256" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="https://www.instagram.com/eclipsor_rishabh?igsh=dGM2NXJ0YWxzOGpy" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-instagram"></i>
+            <a href="https://github.com/AnuragTiwari1508" target="_blank" rel="noopener noreferrer" title="Profile">
+                <i class="fas fa-user-circle"></i>
             </a>
         </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- ═══ Scripts ══════════════════════════════════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="auth.js"></script>
+    <script src="ai-assistant.js"></script>
     <script>
-        const geminiApiKey = 'AIzaSyCKhPC6zO7F-0hA2cvwIdpy1oU7V3wKJoU';
-        
-        new Vue({
-            el: '#app',
-            data: {
-                messages: [],
-                newMessage: '',
-                errorMessage: ''
-            },
-            methods: {
-                async sendMessage() {
-                    if (!this.newMessage.trim()) return;
-                    
-                    const message = {
-                        sender: 'user',
-                        text: this.newMessage
-                    };
-                    this.messages.push(message);
-                    this.newMessage = '';
-                    
-                    const thinkingIndex = this.messages.length;
-                    this.messages.push({
-                        sender: 'rishabh',
-                        text: 'Thinking...'
-                    });
-                    
-                    try {
-                        const response = await axios.post(
-                            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiApiKey}`,
-                            {
-                                contents: [{
-                                    parts: [{ text: message.text }]
-                                }]
-                            }
-                        );
-                        
-                        if (response.data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-                            let rishabhMessage = response.data.candidates[0].content.parts[0].text;
-                            this.messages.splice(thinkingIndex, 1, {
-                                sender: 'rishabh',
-                                text: rishabhMessage.trim()
-                            });
-                        } else {
-                            this.messages.splice(thinkingIndex, 1);
-                            this.messages.push({
-                                sender: 'rishabh',
-                                text: 'Sorry, I could not process your request at the moment.'
-                            });
-                        }
-                    } catch (error) {
-                        this.messages.splice(thinkingIndex, 1);
-                        this.messages.push({
-                            sender: 'rishabh',
-                            text: 'Sorry, I encountered an error while processing your request.'
-                        });
-                    }
-                }
-            }
-        });
-
-        // Theme Toggle Script - copied from index.html
+        // ── Theme Toggle ────────────────────────────────
         const themeToggle = document.getElementById('theme-toggle');
-
-        // Check for saved theme in localStorage
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme) {
             document.body.className = savedTheme;
-            updateButtonText();
         }
+        updateThemeIcon();
 
-        // Add click event listener to toggle button
         themeToggle.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             document.body.classList.toggle('light-mode');
-
-            // Save the current theme in localStorage
-            const currentTheme = document.body.className;
-            localStorage.setItem('theme', currentTheme);
-
-            updateButtonText();
+            localStorage.setItem('theme', document.body.className);
+            updateThemeIcon();
         });
 
-        // Update button text based on current theme
-        function updateButtonText() {
+        function updateThemeIcon() {
+            const icon = themeToggle.querySelector('i');
             if (document.body.classList.contains('dark-mode')) {
-                themeToggle.textContent = '☀️ Light Mode';
-                themeToggle.classList.add('dark');
+                icon.className = 'fas fa-sun';
             } else {
-                themeToggle.textContent = '🌙 Dark Mode';
-                themeToggle.classList.remove('dark');
+                icon.className = 'fas fa-moon';
             }
         }
 
-        // Mobile Navigation Script
+        // ── Mobile Navigation ───────────────────────────
         const mobileToggle = document.querySelector('.mobile-toggle');
         const navbarMenu = document.querySelector('.navbar-menu');
 
@@ -547,7 +338,6 @@
             navbarMenu.classList.toggle('active');
             const isExpanded = navbarMenu.classList.contains('active');
             mobileToggle.setAttribute('aria-expanded', isExpanded);
-            
             const icon = mobileToggle.querySelector('i');
             icon.classList.toggle('fa-bars');
             icon.classList.toggle('fa-times');

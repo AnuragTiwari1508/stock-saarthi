@@ -1,238 +1,544 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-  <meta name="description" content="Stock Saarthi - Your AI-powered stock trading platform">
-  <title>Stock Saarthi</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
-  <link rel="stylesheet" href="website.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios@0.21.1/dist/axios.min.js"></script>
-  <style>
-    .container {
-        max-width: 800px;
-        margin: 80px auto;
-        padding: 2rem;
-        background: var(--background-light);
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        transition: all 0.3s ease;
-    }
-
-    .dark-mode .container {
-        background: var(--card-dark);
-        color: var(--text-light);
-    }
-
-    button {
-        padding: 10px 20px;
-        margin: 10px;
-        border-radius: 5px;
-        border: none;
-        background: var(--primary-color);
-        color: white;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .dark-mode button {
-        background: var(--secondary-color);
-    }
-
-    #result {
-        margin-top: 20px;
-        padding: 15px;
-        border-radius: 5px;
-        background: rgba(0, 0, 0, 0.05);
-    }
-
-    .dark-mode #result {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--text-light);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Stock Saarthi Wallet - Manage your funds, portfolio and trades">
+    <title>Wallet & Portfolio — Stock Saarthi</title>
+    <link rel="stylesheet" href="website.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="light-mode">
-  <!-- Navigation Bar -->
-  <nav class="navbar">
-    <div class="navbar-brand">
-      <i class="fas fa-chart-line fa-2x"></i>
-      <span>STOCK SAARTHI</span>
-      <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
-        <i class="fas fa-bars"></i>
-      </button>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fas fa-chart-line fa-2x"></i>
+            <span>STOCK SAARTHI</span>
+            <button class="mobile-toggle" aria-label="Toggle navigation" aria-expanded="false">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="navbar-menu">
+            <a href="index.html" class="navbar-item">
+                <i class="fas fa-home"></i> Home
+            </a>
+            <a href="index.html#stocks-section" class="navbar-item">
+                <i class="fas fa-chart-bar"></i> Stocks
+            </a>
+            <a href="index.html#mutual-funds-section" class="navbar-item">
+                <i class="fas fa-hand-holding-usd"></i> Mutual Funds
+            </a>
+            <a href="AI.html" class="navbar-item">
+                <i class="fas fa-robot"></i> AI Assistant
+            </a>
+            <a href="profile.html" class="navbar-item">
+                <i class="fas fa-wallet"></i> Wallet
+            </a>
+            <a href="login.html" class="navbar-item">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </a>
+            <button id="theme-toggle" class="navbar-item">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Wallet Content -->
+    <main class="wallet-page-container" id="wallet-app">
+        <!-- Loading / Not Logged In states handled by JS -->
+    </main>
+
+    <!-- Add Funds Modal -->
+    <div class="funds-modal-overlay" id="funds-modal" style="display:none;">
+        <div class="funds-modal">
+            <h2><i class="fas fa-plus-circle"></i> Add Funds</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.2rem;">
+                Select a quick amount or enter a custom amount
+            </p>
+            <div class="quick-amounts">
+                <button class="quick-amount-btn" data-amount="10000">₹10,000</button>
+                <button class="quick-amount-btn" data-amount="25000">₹25,000</button>
+                <button class="quick-amount-btn" data-amount="50000">₹50,000</button>
+                <button class="quick-amount-btn" data-amount="100000">₹1,00,000</button>
+                <button class="quick-amount-btn" data-amount="500000">₹5,00,000</button>
+                <button class="quick-amount-btn" data-amount="1000000">₹10,00,000</button>
+            </div>
+            <div class="trade-input-group">
+                <label>Custom Amount (₹)</label>
+                <input type="number" id="funds-amount" min="1" max="10000000" placeholder="Enter amount" step="1">
+            </div>
+            <button class="trade-execute-btn buy-btn" id="add-funds-confirm" style="margin-top:0.5rem;">
+                <i class="fas fa-plus"></i> Add Funds
+            </button>
+            <button class="trade-execute-btn" id="funds-cancel" 
+                    style="background:transparent; color:var(--text-muted); border:1px solid rgba(0,0,0,0.1); margin-top:0.5rem;">
+                Cancel
+            </button>
+        </div>
     </div>
-    <div class="navbar-menu">
-      <a href="index.html" class="navbar-item">
-        <i class="fas fa-home"></i> Home
-      </a>
-      <a href="index.html#stocks-section" class="navbar-item">
-        <i class="fas fa-chart-bar"></i> Stocks
-      </a>
-      <a href="index.html#mutual-funds-section" class="navbar-item">
-        <i class="fas fa-hand-holding-usd"></i> Mutual Funds
-      </a>
-      <a href="AI.html" class="navbar-item">
-        <i class="fas fa-robot"></i> AI Assistant
-      </a>
-      <a href="profile.html" class="navbar-item">
-        <i class="fas fa-wallet"></i> Wallet
-      </a>
-      <button id="theme-toggle" class="navbar-item">
-        <i class="fas fa-moon"></i>
-      </button>
+
+    <!-- Withdraw Modal -->
+    <div class="funds-modal-overlay" id="withdraw-modal" style="display:none;">
+        <div class="funds-modal">
+            <h2><i class="fas fa-minus-circle" style="color:var(--danger-color)"></i> Withdraw Funds</h2>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:1.2rem;">
+                Enter the amount you want to withdraw
+            </p>
+            <div class="trade-input-group">
+                <label>Amount (₹)</label>
+                <input type="number" id="withdraw-amount" min="1" placeholder="Enter amount" step="1">
+            </div>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:1rem;">
+                Available: <strong id="withdraw-available" style="color:var(--success-color);">₹0</strong>
+            </p>
+            <button class="trade-execute-btn sell-btn" id="withdraw-confirm" style="margin-top:0.5rem;">
+                <i class="fas fa-arrow-down"></i> Withdraw
+            </button>
+            <button class="trade-execute-btn" id="withdraw-cancel" 
+                    style="background:transparent; color:var(--text-muted); border:1px solid rgba(0,0,0,0.1); margin-top:0.5rem;">
+                Cancel
+            </button>
+        </div>
     </div>
-  </nav>
 
-  <div class="container">
-    <h1>Test MetaMask API</h1>
-    <p>This example demonstrates basic MetaMask interactions: checking for MetaMask provider, connecting, and retrieving account balance.</p>
-    <button id="connectBtn">Connect to MetaMask</button>
-    <button id="getBalanceBtn">Get ETH Balance</button>
-    <div id="result"></div>
-  </div>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
 
-  <script>
-    const connectBtn = document.getElementById('connectBtn');
-    const getBalanceBtn = document.getElementById('getBalanceBtn');
-    const resultDiv = document.getElementById('result');
-    let userAccount;
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Stock Saarthi</h3>
+                <p>Your Tokenized AI-powered companion for smart investment decisions.</p>
+            </div>
+            <div class="footer-links">
+                <a href="aboutus.html">About Us</a>
+                <a href="contactUS.html">Contact</a>
+                <a href="privacy.html">Privacy Policy</a>
+            </div>
+            <div class="footer-section">
+                <h4>Connect With Us</h4>
+                <div class="social-links">
+                    <a href="mailto:rishabharaj321@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a>
+                    <a href="https://www.linkedin.com/in/rishabharaj-sharma-57a7a8256" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.instagram.com/eclipsor_rishabh?igsh=dGM2NXJ0YWxzOGpy" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-    // Check if MetaMask (or any injected Ethereum provider) is installed
-    function checkMetaMask() {
-      if (typeof window.ethereum !== 'undefined') {
-        logResult('MetaMask is installed!');
-        return true;
-      } else {
-        logResult('MetaMask is not installed. Please install it from https://metamask.io/');
-        return false;
-      }
-    }
+    <script src="auth.js"></script>
+    <script>
+        // ── Format Helpers ──────────────────────────────
+        const fmtINR = (v) => {
+            if (v == null || isNaN(v)) return '—';
+            return new Intl.NumberFormat('en-IN', {
+                style: 'currency', currency: 'INR', maximumFractionDigits: 2,
+            }).format(v);
+        };
 
-    function logResult(message) {
-      console.log(message);
-      resultDiv.textContent = message;
-    }
-
-    // Request account access
-    async function connectMetaMask() {
-      if (!checkMetaMask()) return;
-
-      try {
-        const accounts = await window.ethereum.request({
-          method: 'eth_requestAccounts',
-        });
-        userAccount = accounts[0];
-        logResult(`Connected Account: ${userAccount}`);
-      } catch (error) {
-        logResult(`Failed to connect MetaMask: ${error.message}`);
-      }
-    }
-
-    // Retrieve ETH balance of the connected account
-    async function getBalance() {
-      if (!userAccount) {
-        logResult('No account connected. Please connect MetaMask first.');
-        return;
-      }
-
-      try {
-        const balanceHex = await window.ethereum.request({
-          method: 'eth_getBalance',
-          params: [userAccount, 'latest'],
-        });
-
-        // Convert hex balance to decimal, then to Ether
-        const balanceWei = parseInt(balanceHex, 16);
-        // 1 ETH = 1e18 Wei
-        const balanceEth = balanceWei / 1e18;
-        logResult(`ETH Balance: ${balanceEth} ETH`);
-      } catch (error) {
-        logResult(`Failed to retrieve balance: ${error.message}`);
-      }
-    }
-
-    // Attach event listeners
-    connectBtn.addEventListener('click', connectMetaMask);
-    getBalanceBtn.addEventListener('click', getBalance);
-  </script>
-  <script>
-    // Mobile menu functionality
-    const mobileToggle = document.querySelector('.mobile-toggle');
-    const navbarMenu = document.querySelector('.navbar-menu');
-
-    mobileToggle.addEventListener('click', () => {
-      navbarMenu.classList.toggle('active');
-      const isExpanded = navbarMenu.classList.contains('active');
-      mobileToggle.setAttribute('aria-expanded', isExpanded);
-
-      // Toggle icon between bars and times
-      const icon = mobileToggle.querySelector('i');
-      icon.classList.toggle('fa-bars');
-      icon.classList.toggle('fa-times');
-    });
-
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.navbar') && navbarMenu.classList.contains('active')) {
-        navbarMenu.classList.remove('active');
-        mobileToggle.setAttribute('aria-expanded', false);
-        mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
-      }
-    });
-
-    // Close menu when window is resized
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768 && navbarMenu.classList.contains('active')) {
-        navbarMenu.classList.remove('active');
-        mobileToggle.setAttribute('aria-expanded', false);
-        mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
-      }
-    });
-  </script>
-  <script>
-    // Theme toggle functionality
-    document.addEventListener('DOMContentLoaded', () => {
-        const themeToggle = document.getElementById('theme-toggle');
-        const icon = themeToggle.querySelector('i');
-        
-        // Check saved theme
-        const savedTheme = localStorage.getItem('theme') || 'light-mode';
-        document.body.className = savedTheme;
-        updateThemeIcon();
-
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-            localStorage.setItem('theme', document.body.className);
-            updateThemeIcon();
-        });
-
-        function updateThemeIcon() {
-            if (document.body.classList.contains('dark-mode')) {
-                icon.className = 'fas fa-sun';
-            } else {
-                icon.className = 'fas fa-moon';
+        // ── Check Auth ──────────────────────────────────
+        function checkAuth() {
+            if (!AuthManager.isLoggedIn()) {
+                document.getElementById('wallet-app').innerHTML = `
+                    <div style="text-align:center; padding:4rem 2rem;">
+                        <i class="fas fa-lock" style="font-size:4rem; color:var(--text-muted); margin-bottom:1.5rem;"></i>
+                        <h2>Login Required</h2>
+                        <p style="color:var(--text-muted); margin:1rem 0;">Please login or create an account to access your wallet.</p>
+                        <a href="login.html" class="auth-submit-btn" style="display:inline-flex; max-width:300px; text-decoration:none;">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                        <p style="margin-top:1rem; color:var(--text-muted); font-size:0.85rem;">
+                            Don't have an account? <a href="register.html" style="color:var(--primary-color); font-weight:600;">Register</a>
+                        </p>
+                    </div>
+                `;
+                return false;
             }
+            return true;
         }
-    });
-  </script>
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2024 Stock Saarthi. All rights reserved.</p>
-    <div class="footer-links">
-        <a href="aboutus.html">About Us</a>
-        <a href="contactUS.html">Contact Us</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-    </div>
-    <div class="social-links">
-        <a href="mailto:rishabharaj321@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a>
-        <a href="https://www.linkedin.com/in/rishabharaj-sharma-57a7a8256" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
-        <a href="https://www.instagram.com/eclipsor_rishabh?igsh=dGM2NXJ0YWxzOGpy" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-    </div>
-  </footer>
+
+        // ── Render Wallet Page ──────────────────────────
+        function renderWalletPage() {
+            if (!checkAuth()) return;
+
+            const user = AuthManager.getUserProfile();
+            const userId = user.id;
+            const wallet = WalletManager.getWallet(userId);
+            const portfolio = PortfolioManager.getPortfolioSummary(userId);
+            const transactions = TransactionManager.getRecentTransactions(userId, 50);
+
+            const app = document.getElementById('wallet-app');
+
+            app.innerHTML = `
+                <!-- User Profile -->
+                <div class="user-profile-card">
+                    <div class="user-avatar">${user.fullName.charAt(0).toUpperCase()}</div>
+                    <div class="user-info">
+                        <h3>${user.fullName}</h3>
+                        <p>@${user.username} · ${user.email}</p>
+                    </div>
+                    <button class="logout-btn" id="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                </div>
+
+                <!-- Wallet Hero -->
+                <div class="wallet-hero">
+                    <div class="wallet-hero-content">
+                        <div class="wallet-balance-label">Available Balance</div>
+                        <div class="wallet-balance-amount" id="balance-display">${fmtINR(wallet.balance)}</div>
+                        <div class="wallet-actions">
+                            <button class="wallet-action-btn primary" id="add-funds-btn">
+                                <i class="fas fa-plus"></i> Add Funds
+                            </button>
+                            <button class="wallet-action-btn danger" id="withdraw-btn">
+                                <i class="fas fa-arrow-down"></i> Withdraw
+                            </button>
+                            <a href="index.html#stocks-section" class="wallet-action-btn" style="text-decoration:none;">
+                                <i class="fas fa-shopping-cart"></i> Trade Stocks
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="wallet-stats-row">
+                    <div class="wallet-stat-card">
+                        <div class="stat-icon green"><i class="fas fa-arrow-up"></i></div>
+                        <div class="stat-title">Total Deposited</div>
+                        <div class="stat-val">${fmtINR(wallet.totalDeposited)}</div>
+                    </div>
+                    <div class="wallet-stat-card">
+                        <div class="stat-icon red"><i class="fas fa-arrow-down"></i></div>
+                        <div class="stat-title">Total Withdrawn</div>
+                        <div class="stat-val">${fmtINR(wallet.totalWithdrawn)}</div>
+                    </div>
+                    <div class="wallet-stat-card">
+                        <div class="stat-icon blue"><i class="fas fa-chart-pie"></i></div>
+                        <div class="stat-title">Invested</div>
+                        <div class="stat-val">${fmtINR(portfolio.totalInvested)}</div>
+                    </div>
+                    <div class="wallet-stat-card">
+                        <div class="stat-icon purple"><i class="fas fa-cubes"></i></div>
+                        <div class="stat-title">Stocks Held</div>
+                        <div class="stat-val">${portfolio.stockCount}</div>
+                    </div>
+                </div>
+
+                <!-- Portfolio Section -->
+                <div class="wallet-section">
+                    <div class="wallet-section-header">
+                        <h2><i class="fas fa-briefcase"></i> My Portfolio</h2>
+                    </div>
+                    <div id="portfolio-content">
+                        ${renderPortfolio(portfolio.holdings)}
+                    </div>
+                </div>
+
+                <!-- Transaction History -->
+                <div class="wallet-section">
+                    <div class="wallet-section-header">
+                        <h2><i class="fas fa-history"></i> Transaction History</h2>
+                        <div class="txn-filters">
+                            <button class="txn-filter-btn active" data-filter="ALL">All</button>
+                            <button class="txn-filter-btn" data-filter="BUY">Buy</button>
+                            <button class="txn-filter-btn" data-filter="SELL">Sell</button>
+                            <button class="txn-filter-btn" data-filter="DEPOSIT">Deposit</button>
+                            <button class="txn-filter-btn" data-filter="WITHDRAWAL">Withdraw</button>
+                        </div>
+                    </div>
+                    <div id="txn-list" class="txn-list">
+                        ${renderTransactions(transactions)}
+                    </div>
+                </div>
+
+                <!-- MetaMask Section -->
+                <div class="wallet-section">
+                    <div class="metamask-section">
+                        <h3><i class="fab fa-ethereum"></i> Crypto Wallet</h3>
+                        <p>Connect your MetaMask wallet to view your crypto balance alongside your trading wallet.</p>
+                        <button class="metamask-btn" id="metamask-connect">
+                            <i class="fab fa-ethereum"></i> Connect MetaMask
+                        </button>
+                        <div id="metamask-result" style="margin-top:0.8rem; font-size:0.85rem; color:var(--text-muted);"></div>
+                    </div>
+                </div>
+            `;
+
+            // Attach event listeners
+            attachEventListeners(userId);
+        }
+
+        // ── Render Portfolio Table ──────────────────────
+        function renderPortfolio(holdings) {
+            if (!holdings || holdings.length === 0) {
+                return `
+                    <div class="portfolio-empty">
+                        <i class="fas fa-chart-area"></i>
+                        <h3>No Holdings Yet</h3>
+                        <p>Start trading to build your portfolio. <a href="index.html#stocks-section">Browse Stocks →</a></p>
+                    </div>
+                `;
+            }
+
+            let rows = holdings.map(h => {
+                const displaySymbol = h.symbol.replace('.NS', '').replace('.BO', '');
+                // We don't have live prices here, so we show invested info
+                return `
+                    <tr>
+                        <td>
+                            <span class="stock-name-cell">${h.name}</span>
+                            <span class="stock-symbol-cell">${displaySymbol}</span>
+                        </td>
+                        <td>${h.qty}</td>
+                        <td>${fmtINR(h.avgPrice)}</td>
+                        <td>${fmtINR(h.totalInvested)}</td>
+                        <td>
+                            <button class="stock-sell-btn" style="padding:0.4rem 0.8rem; font-size:0.75rem;"
+                                    onclick="goToSellStock('${h.symbol}')">
+                                <i class="fas fa-arrow-down"></i> Sell
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            return `
+                <div class="portfolio-table-container">
+                    <table class="portfolio-table">
+                        <thead>
+                            <tr>
+                                <th>Stock</th>
+                                <th>Qty</th>
+                                <th>Avg Price</th>
+                                <th>Invested</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>${rows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function goToSellStock(symbol) {
+            // Redirect to home page where trading happens with live prices
+            window.location.href = `index.html#stocks-section`;
+        }
+
+        // ── Render Transactions ─────────────────────────
+        function renderTransactions(txns) {
+            if (!txns || txns.length === 0) {
+                return '<p style="text-align:center; color:var(--text-muted); padding:2rem;">No transactions yet</p>';
+            }
+
+            return txns.map(txn => {
+                const iconMap = {
+                    'BUY': { icon: 'fa-cart-plus', cls: 'buy' },
+                    'SELL': { icon: 'fa-arrow-right', cls: 'sell' },
+                    'DEPOSIT': { icon: 'fa-plus-circle', cls: 'deposit' },
+                    'WITHDRAWAL': { icon: 'fa-minus-circle', cls: 'withdrawal' },
+                };
+                const info = iconMap[txn.type] || iconMap['DEPOSIT'];
+                const isCredit = txn.type === 'SELL' || txn.type === 'DEPOSIT';
+                const date = new Date(txn.timestamp);
+                const dateStr = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                const timeStr = date.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+
+                let subtitle = `${dateStr} · ${timeStr}`;
+                if (txn.qty) subtitle += ` · ${txn.qty} shares @ ${fmtINR(txn.price)}`;
+
+                return `
+                    <div class="txn-item">
+                        <div class="txn-icon ${info.cls}"><i class="fas ${info.icon}"></i></div>
+                        <div class="txn-details">
+                            <div class="txn-title">${txn.type} — ${txn.stockName || 'Wallet'}</div>
+                            <div class="txn-subtitle">${subtitle}</div>
+                        </div>
+                        <div class="txn-amount ${isCredit ? 'credit' : 'debit'}">
+                            ${isCredit ? '+' : '-'}${fmtINR(txn.total)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ── Attach Event Listeners ──────────────────────
+        function attachEventListeners(userId) {
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                AuthManager.logout();
+                Toast.success('Logged out successfully');
+                setTimeout(() => window.location.href = 'login.html', 500);
+            });
+
+            // Add Funds
+            document.getElementById('add-funds-btn').addEventListener('click', () => {
+                document.getElementById('funds-modal').style.display = 'flex';
+            });
+
+            document.getElementById('funds-cancel').addEventListener('click', () => {
+                document.getElementById('funds-modal').style.display = 'none';
+            });
+
+            document.getElementById('funds-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'funds-modal') e.target.style.display = 'none';
+            });
+
+            // Quick amount buttons
+            document.querySelectorAll('.quick-amount-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.quick-amount-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                    document.getElementById('funds-amount').value = btn.dataset.amount;
+                });
+            });
+
+            // Confirm add funds
+            document.getElementById('add-funds-confirm').addEventListener('click', () => {
+                const amount = parseFloat(document.getElementById('funds-amount').value);
+                if (!amount || amount <= 0) {
+                    Toast.error('Please enter a valid amount');
+                    return;
+                }
+
+                const result = WalletManager.addFunds(userId, amount);
+                if (result.success) {
+                    Toast.success(`₹${amount.toLocaleString('en-IN')} added to your wallet!`);
+                    document.getElementById('funds-modal').style.display = 'none';
+                    document.getElementById('funds-amount').value = '';
+                    renderWalletPage(); // Re-render
+                } else {
+                    Toast.error(result.error);
+                }
+            });
+
+            // Withdraw
+            document.getElementById('withdraw-btn').addEventListener('click', () => {
+                const bal = WalletManager.getBalance(userId);
+                document.getElementById('withdraw-available').textContent = fmtINR(bal);
+                document.getElementById('withdraw-modal').style.display = 'flex';
+            });
+
+            document.getElementById('withdraw-cancel').addEventListener('click', () => {
+                document.getElementById('withdraw-modal').style.display = 'none';
+            });
+
+            document.getElementById('withdraw-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'withdraw-modal') e.target.style.display = 'none';
+            });
+
+            document.getElementById('withdraw-confirm').addEventListener('click', () => {
+                const amount = parseFloat(document.getElementById('withdraw-amount').value);
+                if (!amount || amount <= 0) {
+                    Toast.error('Please enter a valid amount');
+                    return;
+                }
+
+                const result = WalletManager.withdraw(userId, amount);
+                if (result.success) {
+                    Toast.success(`₹${amount.toLocaleString('en-IN')} withdrawn successfully!`);
+                    document.getElementById('withdraw-modal').style.display = 'none';
+                    document.getElementById('withdraw-amount').value = '';
+                    renderWalletPage();
+                } else {
+                    Toast.error(result.error);
+                }
+            });
+
+            // Transaction Filters
+            document.querySelectorAll('.txn-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.txn-filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filter = btn.dataset.filter;
+                    let txns;
+                    if (filter === 'ALL') {
+                        txns = TransactionManager.getRecentTransactions(userId, 50);
+                    } else {
+                        txns = TransactionManager.filterByType(userId, filter);
+                    }
+                    document.getElementById('txn-list').innerHTML = renderTransactions(txns);
+                });
+            });
+
+            // MetaMask
+            document.getElementById('metamask-connect').addEventListener('click', async () => {
+                const resultDiv = document.getElementById('metamask-result');
+                if (typeof window.ethereum === 'undefined') {
+                    resultDiv.innerHTML = '<span style="color:var(--danger-color);">MetaMask not installed. <a href="https://metamask.io/" target="_blank" style="color:var(--primary-color);">Install MetaMask</a></span>';
+                    return;
+                }
+
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    const account = accounts[0];
+                    const balanceHex = await window.ethereum.request({
+                        method: 'eth_getBalance',
+                        params: [account, 'latest'],
+                    });
+                    const balanceEth = parseInt(balanceHex, 16) / 1e18;
+                    resultDiv.innerHTML = `
+                        <div style="background:rgba(16,185,129,0.1); padding:0.8rem; border-radius:10px; margin-top:0.5rem;">
+                            <div style="font-size:0.75rem; color:var(--text-muted);">Connected Account</div>
+                            <div style="font-weight:600; font-size:0.85rem; word-break:break-all;">${account}</div>
+                            <div style="margin-top:0.5rem; font-weight:700; color:var(--success-color);">${balanceEth.toFixed(6)} ETH</div>
+                        </div>
+                    `;
+                    Toast.success('MetaMask connected!');
+                } catch (error) {
+                    resultDiv.innerHTML = `<span style="color:var(--danger-color);">Connection failed: ${error.message}</span>`;
+                }
+            });
+        }
+
+        // ── Theme & Mobile Menu ─────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('i');
+            const savedTheme = localStorage.getItem('theme') || 'light-mode';
+            document.body.className = savedTheme;
+            updateThemeIcon();
+
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                document.body.classList.toggle('light-mode');
+                localStorage.setItem('theme', document.body.className);
+                updateThemeIcon();
+            });
+
+            function updateThemeIcon() {
+                icon.className = document.body.classList.contains('dark-mode') ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Mobile menu
+            const mobileToggle = document.querySelector('.mobile-toggle');
+            const navbarMenu = document.querySelector('.navbar-menu');
+            mobileToggle.addEventListener('click', () => {
+                navbarMenu.classList.toggle('active');
+                const isExpanded = navbarMenu.classList.contains('active');
+                mobileToggle.setAttribute('aria-expanded', isExpanded);
+                const ic = mobileToggle.querySelector('i');
+                ic.classList.toggle('fa-bars', !isExpanded);
+                ic.classList.toggle('fa-times', isExpanded);
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.navbar') && navbarMenu.classList.contains('active')) {
+                    navbarMenu.classList.remove('active');
+                    mobileToggle.setAttribute('aria-expanded', false);
+                    mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
+                }
+            });
+
+            // Navbar auth state
+            updateNavbarAuthState();
+
+            // Render wallet
+            renderWalletPage();
+        });
+    </script>
 </body>
 </html>

@@ -3,8 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const connectBtn = document.getElementById('connectBtn');
     const statusDiv = document.getElementById('status');
-  
-    connectBtn.addEventListener('click', async () => {
+    if (!connectBtn || !statusDiv) return;
       if (typeof window.ethereum !== 'undefined') {
         // MetaMask is installed
         try {

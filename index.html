@@ -49,57 +49,125 @@
         <!-- Market Overview Section -->
         <section class="market-overview">
             <h2><i class="fas fa-chart-line"></i> Market Overview</h2>
-            <div class="market-stats">
-                <!-- Add your market statistics here -->
+            <p class="market-subtitle">Live Indian Stock Market Data — NSE & BSE</p>
+            <div class="market-stats" id="market-stats">
+                <div class="stat-card">
+                    <i class="fas fa-fire"></i>
+                    <span class="stat-label">Trending Stocks</span>
+                    <span class="stat-value" id="stat-trending">--</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-clock"></i>
+                    <span class="stat-label">Last Updated</span>
+                    <span class="stat-value" id="stat-time">--</span>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-plug"></i>
+                    <span class="stat-label">API Status</span>
+                    <span class="stat-value" id="stat-api">Connecting...</span>
+                </div>
             </div>
         </section>
 
-        <h1>Explore Stocks</h1>
-        <div class="stocks-container">
-            <!-- Stock Cards -->
-            <div class="stock-card">
-                <h2>Apple Inc. (AAPL)</h2>
-                <p>Price: $172.38</p>
-                <p class="positive">+1.24%</p>
-                <button class="buy-button">Buy</button>
+        <!-- Search Section -->
+        <section class="search-section" id="stocks-section">
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="stock-search" placeholder="Search any Indian stock... (e.g. Reliance, TCS, Infosys)" autocomplete="off">
+                    <button id="search-btn" class="search-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+                <div class="search-suggestions" id="search-suggestions"></div>
             </div>
-            <div class="stock-card">
-                <h2>Tesla Inc. (TSLA)</h2>
-                <p>Price: $674.23</p>
-                <p class="negative">-2.16%</p>
-                <button class="buy-button">Buy</button>
+        </section>
+
+        <!-- Stocks Section -->
+        <section class="stocks-section">
+            <div class="section-header">
+                <h1 id="stocks-title"><i class="fas fa-fire-alt"></i> Trending Stocks</h1>
+                <button class="refresh-btn" id="refresh-btn" title="Refresh Data">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
-            <div class="stock-card">
-                <h2>Amazon.com (AMZN)</h2>
-                <p>Price: $123.45</p>
-                <p class="positive">+0.82%</p>
-                <button class="buy-button">Buy</button>
+            <div class="stocks-container" id="stocks-container">
+                <!-- Loading State -->
+                <div class="loading-state" id="loading-state">
+                    <div class="spinner"></div>
+                    <p>Loading stocks from IndianAPI...</p>
+                </div>
             </div>
-            <div class="stock-card">
-                <h2>Tata Consultancy Services Limited</h2>
-                <p>Price: $350</p>
-                <p class="positive">+2.5%</p>
-                <button class="buy-button">Buy</button>
-            </div>
-            <div class="stock-card">
-                <h2>Reliance Industries Limited</h2>
-                <p>Price: $240</p>
-                <p class="negative">-1.2%</p>
-                <button class="buy-button">Buy</button>
-            </div>
-            <div class="stock-card">
-                <h2>Infosys Limited</h2>
-                <p>Price: $1700</p>
-                <p class="positive">+3.1%</p>
-                <button class="buy-button">Buy</button>
-            </div>
-            <div class="stock-card">
-                <h2>Reliance Industries Limited</h2>
-                <p>Price: $1450</p>
-                <p class="negative">-0.5%</p>
-                <button class="buy-button">Buy</button>
+        </section>
+
+        <!-- Stock Detail Modal -->
+        <div class="stock-modal-overlay" id="stock-modal" style="display:none;">
+            <div class="stock-modal">
+                <button class="modal-close" id="modal-close"><i class="fas fa-times"></i></button>
+                <div id="modal-content">
+                    <div class="spinner"></div>
+                    <p>Loading details...</p>
+                </div>
             </div>
         </div>
+
+        <!-- Trade Modal (Buy/Sell) -->
+        <div class="trade-modal-overlay" id="trade-modal" style="display:none;">
+            <div class="trade-modal">
+                <div class="trade-modal-header buy-mode" id="trade-modal-header">
+                    <h2 id="trade-modal-title"><i class="fas fa-cart-plus"></i> Buy Stock</h2>
+                    <button class="trade-modal-close" id="trade-modal-close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="trade-modal-body">
+                    <div class="trade-stock-info">
+                        <div>
+                            <div class="trade-stock-name" id="trade-stock-name">—</div>
+                            <div class="trade-stock-symbol" id="trade-stock-symbol">—</div>
+                        </div>
+                        <div class="trade-stock-price" id="trade-stock-price">—</div>
+                    </div>
+
+                    <div class="trade-input-group">
+                        <label>Quantity</label>
+                        <input type="number" id="trade-qty" min="1" value="1" placeholder="Enter quantity">
+                        <div class="trade-qty-controls">
+                            <button class="trade-qty-btn" data-qty="1">1</button>
+                            <button class="trade-qty-btn" data-qty="5">5</button>
+                            <button class="trade-qty-btn" data-qty="10">10</button>
+                            <button class="trade-qty-btn" data-qty="25">25</button>
+                            <button class="trade-qty-btn" data-qty="50">50</button>
+                            <button class="trade-qty-btn" data-qty="100">100</button>
+                        </div>
+                    </div>
+
+                    <div class="trade-summary">
+                        <div class="trade-summary-row">
+                            <span>Price per share</span>
+                            <span id="trade-unit-price">—</span>
+                        </div>
+                        <div class="trade-summary-row">
+                            <span>Quantity</span>
+                            <span id="trade-qty-display">1</span>
+                        </div>
+                        <div class="trade-summary-row total">
+                            <span>Total Amount</span>
+                            <span id="trade-total">—</span>
+                        </div>
+                    </div>
+
+                    <div class="trade-wallet-balance">
+                        Wallet Balance: <strong id="trade-wallet-bal">₹0</strong>
+                    </div>
+
+                    <button class="trade-execute-btn buy-btn" id="trade-execute">
+                        <i class="fas fa-check"></i> Confirm Buy
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Container -->
+        <div id="toast-container"></div>
 
         <!-- Mutual Funds Section -->
         <section id="mutual-funds-section">
@@ -162,80 +230,18 @@
                 <a href="privacy.html">Privacy Policy</a>
             </div>
             <div class="footer-section">
-                <h4>Connect With Us</h3>
+                <h4>Connect With Us</h4>
                 <div class="social-links">
-                    <a href="mailto:rishabharaj321@gmail.com" target="_blank" rel="noopener noreferrer"><i class="fas fa-envelope"></i></a>
-                    <a href="https://www.linkedin.com/in/rishabharaj-sharma-57a7a8256" target="_blank" rel="noopener noreferrer"><i class="fab fa-linkedin"></i></a>
-                    <a href="https://www.instagram.com/eclipsor_rishabh?igsh=dGM2NXJ0YWxzOGpy" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/AnuragTiwari1508/stock-saarthi" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fab fa-github"></i></a>
+                    <a href="mailto:anuragtiwari@example.com" target="_blank" rel="noopener noreferrer" title="Email"><i class="fas fa-envelope"></i></a>
+                    <a href="https://github.com/AnuragTiwari1508" target="_blank" rel="noopener noreferrer" title="Profile"><i class="fas fa-user-circle"></i></a>
                 </div>
             </div>
         </div>
     </footer>
 
-    <script>
-        // Theme Toggle Script
-        const themeToggle = document.getElementById('theme-toggle');
-
-        // Check for saved theme in localStorage
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme) {
-            document.body.className = savedTheme;
-            updateButtonText();
-        }
-
-        // Add click event listener to toggle button
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            document.body.classList.toggle('light-mode');
-
-            // Save the current theme in localStorage
-            const currentTheme = document.body.className;
-            localStorage.setItem('theme', currentTheme);
-
-            updateButtonText();
-        });
-
-        // Update button text based on current theme
-        function updateButtonText() {
-            if (document.body.classList.contains('dark-mode')) {
-                themeToggle.textContent = '☀️ Light Mode';
-                themeToggle.classList.add('dark');
-            } else {
-                themeToggle.textContent = '🌙 Dark Mode';
-                themeToggle.classList.remove('dark');
-            }
-        }
-
-        // Mobile Navigation Script
-        const mobileToggle = document.querySelector('.mobile-toggle');
-        const navbarMenu = document.querySelector('.navbar-menu');
-
-        mobileToggle.addEventListener('click', () => {
-            navbarMenu.classList.toggle('active');
-            const isExpanded = navbarMenu.classList.contains('active');
-            mobileToggle.setAttribute('aria-expanded', isExpanded);
-            
-            const icon = mobileToggle.querySelector('i');
-            icon.classList.toggle('fa-bars');
-            icon.classList.toggle('fa-times');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.navbar') && navbarMenu.classList.contains('active')) {
-                navbarMenu.classList.remove('active');
-                mobileToggle.setAttribute('aria-expanded', false);
-                mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768 && navbarMenu.classList.contains('active')) {
-                navbarMenu.classList.remove('active');
-                mobileToggle.setAttribute('aria-expanded', false);
-                mobileToggle.querySelector('i').classList.replace('fa-times', 'fa-bars');
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="auth.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

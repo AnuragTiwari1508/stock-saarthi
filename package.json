@@ -1,14 +1,34 @@
 {
-    "name": "metamask-dapp",
-    "version": "1.0.0",
-    "description": "A simple DApp using MetaMask integration",
-    "main": "api.js",
-    "scripts": {
-      "start": "lite-server"
-    },
-    "dependencies": {},
-    "devDependencies": {
-      "lite-server": "^2.6.1"
-    }
+  "name": "stock-saarthi",
+  "version": "1.0.0",
+  "description": "Stock Saarthi - AI-Powered Indian Stock Trading Platform & Portfolio Tracker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "lite-server",
+    "serve": "lite-server"
+  },
+  "keywords": [
+    "stocks",
+    "nse",
+    "bse",
+    "trading",
+    "portfolio",
+    "gemini-ai",
+    "metamask",
+    "web3"
+  ],
+  "author": "Anurag Tiwari",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0",
+    "yahoo-finance2": "^2.11.1"
+  },
+  "devDependencies": {
+    "lite-server": "^2.6.1"
   }
-  
+}

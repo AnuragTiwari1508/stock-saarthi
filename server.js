@@ -3,28 +3,29 @@ const yahooFinance = require('yahoo-finance2').default;
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || 'http://localhost:3000'
+// Security middleware - disable CSP to allow external CDN scripts (Chart.js, FontAwesome, Google Fonts)
+app.use(helmet({
+  contentSecurityPolicy: false
 }));
 
-// Rate limiting
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || '*'
+}));
+
+// Serve static frontend files
+app.use(express.static(__dirname));
+
+// Rate limiting for API routes
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100 // limit each IP to 100 requests per windowMs
 });
 app.use('/api/', limiter);
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: 'Something went wrong!' });
-});
 
 const PORT = process.env.PORT || 3000;
 
@@ -44,13 +45,18 @@ app.get('/api/stock/:symbol', async (req, res) => {
 
     const stockData = await yahooFinance.quote(symbol);
     const responseData = {
-      name: stockData.longName,
+      symbol: stockData.symbol,
+      name: stockData.longName || stockData.shortName || symbol,
       price: stockData.regularMarketPrice,
-      changePercent: stockData.regularMarketChangePercent.toFixed(2),
+      changePercent: stockData.regularMarketChangePercent ? stockData.regularMarketChangePercent.toFixed(2) : '0.00',
+      change: stockData.regularMarketChange || 0,
       volume: stockData.regularMarketVolume,
       marketCap: stockData.marketCap,
-      dayHigh: stockData.dayHigh,
-      dayLow: stockData.dayLow
+      dayHigh: stockData.regularMarketDayHigh || stockData.dayHigh,
+      dayLow: stockData.regularMarketDayLow || stockData.dayLow,
+      fiftyTwoWeekHigh: stockData.fiftyTwoWeekHigh,
+      fiftyTwoWeekLow: stockData.fiftyTwoWeekLow,
+      currency: stockData.currency || 'INR'
     };
 
     // Update cache
@@ -66,6 +72,17 @@ app.get('/api/stock/:symbol', async (req, res) => {
   }
 });
 
+// Fallback to index.html for root
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Stock Saarthi server running at http://localhost:${PORT}`);
 });
